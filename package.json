@@ -10,6 +10,7 @@
     "url": "git://github.com/tim-kos/node-retry.git"
   },
   "files": [
+    "index.js",
     "lib",
     "example"
   ],
