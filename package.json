@@ -10,23 +10,23 @@
     "url": "git://github.com/tim-kos/node-retry.git"
   },
   "files": [
-    "index.js",
     "lib",
-    "example"
+    "!*.map"
   ],
-  "directories": {
-    "lib": "./lib"
-  },
-  "main": "index",
+  "main": "lib/retry.js",
+  "typings": "lib/retry.d.ts",
   "engines": {
-    "node": ">= 4"
+    "node": ">=10"
   },
   "devDependencies": {
+    "@types/node": "^14.0.11",
     "fake": "0.2.0",
     "istanbul": "^0.4.5",
-    "tape": "^4.8.0"
+    "tape": "^4.8.0",
+    "typescript": "^3.9.5"
   },
   "scripts": {
+    "compile": "tsc",
     "test": "./node_modules/.bin/istanbul cover ./node_modules/tape/bin/tape ./test/integration/*.js",
     "release:major": "env SEMANTIC=major npm run release",
     "release:minor": "env SEMANTIC=minor npm run release",

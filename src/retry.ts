@@ -2,19 +2,16 @@ import RetryOperation from './retry_operation'
 
 export function operation (
   options: RetryTimeoutOptions
-    & { unref?: boolean, maxRetryTime?: number }
+    & { maxRetryTime?: number }
 ) {
   var timeouts = createTimeouts(options);
   return new RetryOperation(timeouts, {
-      forever: options && options.forever,
-      unref: options && options.unref,
       maxRetryTime: options && options.maxRetryTime
   });
 };
 
 export type RetryTimeoutOptions = {
   factor?: number,
-  forever?: boolean,
   maxTimeout?: number,
   minTimeout?: number,
   randomize?: boolean,
@@ -27,11 +24,9 @@ export function createTimeouts (options: RetryTimeoutOptions) {
     factor: 2,
     minTimeout: 1 * 1000,
     maxTimeout: Infinity,
-    randomize: false
+    randomize: false,
+    ...options,
   };
-  for (var key in options) {
-    opts[key] = options[key];
-  }
 
   if (opts.minTimeout > opts.maxTimeout) {
     throw new Error('minTimeout is greater than maxTimeout');
@@ -39,11 +34,7 @@ export function createTimeouts (options: RetryTimeoutOptions) {
 
   var timeouts = [];
   for (var i = 0; i < opts.retries; i++) {
-    timeouts.push(this.createTimeout(i, opts));
-  }
-
-  if (options && options.forever && !timeouts.length) {
-    timeouts.push(this.createTimeout(i, opts));
+    timeouts.push(createTimeout(i, opts));
   }
 
   // sort the array numerically ascending
@@ -54,7 +45,10 @@ export function createTimeouts (options: RetryTimeoutOptions) {
   return timeouts;
 };
 
-exports.createTimeout = function(attempt: number, opts: Pick<RetryTimeoutOptions, 'randomize' | 'factor' | 'minTimeout' | 'maxTimeout'>) {
+export function createTimeout (
+  attempt: number,
+  opts: Required<Pick<RetryTimeoutOptions, 'randomize' | 'factor' | 'minTimeout' | 'maxTimeout'>>
+) {
   var random = (opts.randomize)
     ? (Math.random() + 1)
     : 1;
