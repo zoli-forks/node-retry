@@ -18,7 +18,9 @@ var retry = require(common.dir.lib + '/retry');
     operation.attempt(function(currentAttempt) {
       attempts++;
       assert.equal(currentAttempt, attempts);
-      if (operation.retry(error)) {
+      var retryTimeout = operation.retry(error)
+      if (retryTimeout) {
+        assert.equal(typeof retryTimeout, 'number')
         return;
       }
 
