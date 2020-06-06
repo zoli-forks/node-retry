@@ -62,13 +62,13 @@ var operation = retry.operation({
 
 ### retry.operation([options])
 
-Creates a new `RetryOperation` object. `options` is the same as `retry.timeouts()`'s `options`, with three additions:
+Creates a new `RetryOperation` object. `options` is the same as `retry.createTimeouts()`'s `options`, with three additions:
 
 * `forever`: Whether to retry forever, defaults to `false`.
 * `unref`: Whether to [unref](https://nodejs.org/api/timers.html#timers_unref) the setTimeout's, defaults to `false`.
 * `maxRetryTime`: The maximum time (in milliseconds) that the retried operation is allowed to run. Default is `Infinity`.  
 
-### retry.timeouts([options])
+### retry.createTimeouts([options])
 
 Returns an array of timeouts. All time `options` and return values are in
 milliseconds. If `options` is an array, a copy of that array is returned.
@@ -116,7 +116,7 @@ Returns a new `timeout` (integer in milliseconds) based on the given parameters.
 
 `opts` can include `factor`, `minTimeout`, `randomize` (boolean) and `maxTimeout`. They are documented above.
 
-`retry.createTimeout()` is used internally by `retry.timeouts()` and is public for you to be able to create your own timeouts for reinserting an item, see [issue #13](https://github.com/tim-kos/node-retry/issues/13).
+`retry.createTimeout()` is used internally by `retry.createTimeouts()` and is public for you to be able to create your own timeouts for reinserting an item, see [issue #13](https://github.com/tim-kos/node-retry/issues/13).
 
 ### new RetryOperation(timeouts, [options])
 

@@ -1,7 +1,10 @@
-var RetryOperation = require('./retry_operation');
+import RetryOperation from './retry_operation'
 
-exports.operation = function(options) {
-  var timeouts = exports.timeouts(options);
+export function operation (
+  options: RetryTimeoutOptions
+    & { unref?: boolean, maxRetryTime?: number }
+) {
+  var timeouts = createTimeouts(options);
   return new RetryOperation(timeouts, {
       forever: options && options.forever,
       unref: options && options.unref,
@@ -9,11 +12,16 @@ exports.operation = function(options) {
   });
 };
 
-exports.timeouts = function(options) {
-  if (options instanceof Array) {
-    return [].concat(options);
-  }
+export type RetryTimeoutOptions = {
+  factor?: number,
+  forever?: boolean,
+  maxTimeout?: number,
+  minTimeout?: number,
+  randomize?: boolean,
+  retries?: number,
+}
 
+export function createTimeouts (options: RetryTimeoutOptions) {
   var opts = {
     retries: 10,
     factor: 2,
@@ -46,7 +54,7 @@ exports.timeouts = function(options) {
   return timeouts;
 };
 
-exports.createTimeout = function(attempt, opts) {
+exports.createTimeout = function(attempt: number, opts: Pick<RetryTimeoutOptions, 'randomize' | 'factor' | 'minTimeout' | 'maxTimeout'>) {
   var random = (opts.randomize)
     ? (Math.random() + 1)
     : 1;
